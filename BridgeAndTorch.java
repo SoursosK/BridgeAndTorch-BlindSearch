@@ -46,38 +46,17 @@ public class BridgeAndTorch {
 
         while (!dataStructure.isEmpty()) {
             this.visitedNodesCounter++;
-
-            System.out.println(this.visitedNodesCounter);
+            System.out.println("\n" + this.visitedNodesCounter);
 
             Node node = dataStructure.getFirst();
-            System.out.println("\nnode " + node.getName() + " depth: " + node.getDepth());
+
+            System.out.println("node " + node.getName() + " depth: " + node.getDepth());
             dataStructure.removeFirst();
 
             if (!node.checkFiniteState()) {
                 node.createChilds();
             } else {
-                System.out.println("\nBFS found a solution to the problem!");
-                System.out.println("The final cost is " + node.getCost() + " minutes.");
-                System.out.println("The nodes created were " + this.createdNodesCounter + ", with "
-                        + this.visitedNodesCounter + " of them being visited.\n");
-
-                ArrayList<String> output = new ArrayList<>();
-
-                while (node.getDepth() != 0) {
-                    if (node.getName().length() > 1) {
-                        String s = "A" + node.getName().charAt(0) + " and A" + node.getName().charAt(1) + " crossed the bridge in " 
-                            + ( node.getCost() - node.getParentNode().getCost() ) + " minute(s)";
-                        output.add(s);
-                    } else {
-                        String s = "A" + node.getName() + " returns back in " + ( node.getCost() - node.getParentNode().getCost() ) + " minute(s)";
-                        output.add(s);
-                    }
-                    node = node.getParentNode();
-                }
-
-                for(int i=output.size() - 1; i >= 0; i--) {
-                    System.out.println(output.get(i));
-                }
+                printOutput(node);
 
                 // print out the results
                 break;
@@ -89,8 +68,34 @@ public class BridgeAndTorch {
             // } catch (Exception e) {
             // System.out.println("exception caught");
             // }
-
         }
+    }
+
+    private void printOutput(Node node){
+        System.out.println("\nBFS found a solution to the problem!");
+        System.out.println("The final cost is " + node.getCost() + " minutes.");
+        System.out.println("The nodes created were " + this.createdNodesCounter + ", with " + this.visitedNodesCounter
+                + " of them being visited.\n");
+
+        ArrayList<String> output = new ArrayList<>();
+
+        while (node.getDepth() != 0) {
+            if (node.getName().length() > 1) {
+                String s = "A" + node.getName().charAt(0) + " and A" + node.getName().charAt(1)
+                        + " crossed the bridge in " + (node.getCost() - node.getParentNode().getCost()) + " minute(s)";
+                
+                output.add(s);
+            } else {
+                String s = "A" + node.getName() + " returns back in "
+                        + (node.getCost() - node.getParentNode().getCost()) + " minute(s)";
+                
+                output.add(s);
+            }
+            node = node.getParentNode();
+        }
+
+        for (int i = output.size() - 1; i >= 0; i--)
+            System.out.println(output.get(i));
     }
 
     public void insertNode(Node node) {
