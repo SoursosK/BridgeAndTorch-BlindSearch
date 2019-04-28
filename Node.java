@@ -7,7 +7,7 @@ public class Node {
     private BridgeAndTorch bt;
 
     private Node parentNode;
-    private ArrayList<Node> childs;
+    private ArrayList<Node> children;
     private int state[];
 
     private int depth;
@@ -19,11 +19,13 @@ public class Node {
         this.bt = bt;
 
         this.parentNode = parentNode;
-        this.childs = null;
+        this.children = null;
         this.state = state;
 
         this.depth = depth;
         this.cost = cost;
+
+        this.bt.incrementCreatedNodesCounter();
     }
 
     public boolean checkFiniteState(){
@@ -33,15 +35,8 @@ public class Node {
             return false;
     }
 
-    private void insertChildsToDataStructure() {
-        for (Node childNode : childs){
-            bt.incrementCreatedNodesCounter();
-            this.bt.insertNode(childNode);
-        }
-    }
-
-    public void createChilds() {
-        this.childs = new ArrayList<>();
+    public void createChildren() {
+        this.children = new ArrayList<>();
 
         // if the torch is on the left side
         if (state[state.length - 1] == 0)
@@ -50,14 +45,14 @@ public class Node {
                 for (int j = i + 1; j < state.length - 1; j++){
 
                     if (this.state[i] == 0 && this.state[j] == 0) {
-                        int childatate[] = this.state.clone();
-                        childatate[i] = 1;
-                        childatate[j] = 1;
-                        childatate[childatate.length - 1] = 1; // torch goes right
+                        int childState[] = this.state.clone();
+                        childState[i] = 1;
+                        childState[j] = 1;
+                        childState[childState.length - 1] = 1; // torch goes right
 
                         int crossingTime = bt.calculateCrossingTime(i, j);
 
-                        childs.add(new Node(i+""+j, bt, this, childatate, this.depth + 1, this.cost + crossingTime));
+                        children.add(new Node(i+""+j, bt, this, childState, this.depth + 1, this.cost + crossingTime));
                         
                         System.out.println("child created left side");
                     }
@@ -75,15 +70,12 @@ public class Node {
 
                     int crossingTime = bt.getCrossingTime(i);
 
-                    childs.add(new Node(i+"", bt, this, childState, this.depth + 1, this.cost + crossingTime));
+                    this.children.add(new Node(i+"", bt, this, childState, this.depth + 1, this.cost + crossingTime));
                     
                     System.out.println("child created right side");
                 }
 
-        insertChildsToDataStructure();
     }
-
-    
 
     public Node getParentNode() {
         return parentNode;
@@ -93,12 +85,12 @@ public class Node {
         this.parentNode = parentNode;
     }
 
-    public ArrayList<Node> getChilds() {
-        return childs;
+    public ArrayList<Node> getChildren() {
+        return children;
     }
 
-    public void setChilds(ArrayList<Node> childs) {
-        this.childs = childs;
+    public void setChildren(ArrayList<Node> children) {
+        this.children = children;
     }
 
     public int[] getState() {

@@ -37,12 +37,12 @@ public class BridgeAndTorch {
         // System.out.println(finiteState[i]);
         // }
 
-        BFS();
+        //BFS();
+        DFS();
     }
 
     private void BFS() {
         dataStructure.add(new Node("startingNode", this, null, this.state, 0, 0));
-        this.createdNodesCounter++;
 
         while (!dataStructure.isEmpty()) {
             this.visitedNodesCounter++;
@@ -54,11 +54,12 @@ public class BridgeAndTorch {
             dataStructure.removeFirst();
 
             if (!node.checkFiniteState()) {
-                node.createChilds();
-            } else {
-                printOutput(node);
+                node.createChildren();
 
-                // print out the results
+                for (Node childNode : node.getChildren()) 
+                    this.dataStructure.addLast(childNode);
+            } else {
+                printOutput(node, "BFS");
                 break;
             }
 
@@ -71,8 +72,44 @@ public class BridgeAndTorch {
         }
     }
 
-    private void printOutput(Node node){
-        System.out.println("\nBFS found a solution to the problem!");
+    private void DFS() {  // repeated state avoidance has to be added
+        dataStructure.add(new Node("startingNode", this, null, this.state, 0, 0));
+
+        while (!dataStructure.isEmpty()) {
+            this.visitedNodesCounter++;
+            System.out.println("\n" + this.visitedNodesCounter);
+
+            Node node = dataStructure.getFirst();
+
+            System.out.println("node " + node.getName() + " depth: " + node.getDepth());
+            dataStructure.removeFirst();
+
+            if (!node.checkFiniteState()) {
+                node.createChildren();
+
+                for(int i=node.getChildren().size()-1; i>=0; i--){
+                    Node childNode = node.getChildren().get(i);
+                    this.dataStructure.addFirst(childNode);
+                }
+
+            } else {
+                printOutput(node, "DFS");
+                break;
+            }
+
+        }
+
+
+    }
+
+    private void UCS(){
+    }
+
+    private void IDS(){
+    }
+
+    private void printOutput(Node node, String algorithName){
+        System.out.println("\n" + algorithName + " found a solution to the problem!");
         System.out.println("The final cost is " + node.getCost() + " minutes.");
         System.out.println("The nodes created were " + this.createdNodesCounter + ", with " + this.visitedNodesCounter
                 + " of them being visited.\n");
@@ -98,9 +135,9 @@ public class BridgeAndTorch {
             System.out.println(output.get(i));
     }
 
-    public void insertNode(Node node) {
-        this.dataStructure.add(node);
-    }
+    // public void insertNode(Node node) {  
+    //     this.dataStructure.add(node);
+    // }
 
     public int getCrossingTime(int i) {
         return this.costs[i];
