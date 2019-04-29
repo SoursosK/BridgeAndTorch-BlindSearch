@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+// name of the node is a concatenation of the idexes from the state array which were chosen for each stem
+
 public class Node {
     private String name;
 
@@ -41,6 +43,7 @@ public class Node {
         // if the torch is on the left side
         if (state[state.length - 1] == 0)
             
+            // create all the possible pairs of indexes
             for (int i = 0; i < state.length - 1; i++)
                 for (int j = i + 1; j < state.length - 1; j++){
 
@@ -81,40 +84,16 @@ public class Node {
         return parentNode;
     }
 
-    public void setParentNode(Node parentNode) {
-        this.parentNode = parentNode;
-    }
-
     public ArrayList<Node> getChildren() {
         return children;
-    }
-
-    public void setChildren(ArrayList<Node> children) {
-        this.children = children;
-    }
-
-    public int[] getState() {
-        return state;
-    }
-
-    public void setState(int[] state) {
-        this.state = state;
     }
 
     public int getDepth() {
         return depth;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     public int getCost() {
         return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
     }
 
     public String getName() {
